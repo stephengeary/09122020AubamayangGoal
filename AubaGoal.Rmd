@@ -18,7 +18,7 @@ library(ggplot2)
 
 
 
-```{r Importing Data}
+```{r Importing Data, message = FALSE}
 
 setwd("~/Desktop/R/Soccer")
 
@@ -27,7 +27,7 @@ trackingraw <- read_csv("https://raw.githubusercontent.com/rjtavares/football-cr
 ```
 
 
-```{r pressure, echo=FALSE}
+```{r Visualization}
 
 AubaGoalFrames <- trackingraw %>% 
   ggplot(aes(x=x, y=y)) + 
