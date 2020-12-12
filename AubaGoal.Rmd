@@ -1,0 +1,84 @@
+---
+title: "AubaGoal0912020"
+author: "Stephen Geary"
+date: "9/12/2020"
+output: html_document
+---
+
+```{r setup}
+
+library(tidyverse)
+library(gifski)
+library(gganimate)
+library(ggsoccer)
+library(ggplot2)
+
+
+```
+
+
+
+```{r Importing Data}
+
+setwd("~/Desktop/R/Soccer")
+
+trackingraw <- read_csv("https://raw.githubusercontent.com/rjtavares/football-crunching/master/datasets/positional_data/FUL_0-%5B3%5D_ARS.csv")
+
+```
+
+
+```{r pressure, echo=FALSE}
+
+AubaGoalFrames <- trackingraw %>% 
+  ggplot(aes(x=x, y=y)) + 
+  annotate_pitch(dimensions = pitch_opta, colour = "white", fill   = "#8cc29f") +
+  theme_pitch() +
+  theme(plot.background = element_rect(fill = "#8cc29f"),
+        title = element_text(colour = "white")) +
+  geom_point(
+    data = trackingraw %>% filter(team == "attack"),
+    mapping = aes(x = x, y = y),
+    fill = "red", color = "white",
+    shape = 21, alpha = 1, size = 10, stroke = 1.75) + 
+  geom_text(
+    data = trackingraw %>% filter(team == "attack"),
+    mapping = aes(x = x, y = y, label = player_num, family="Helvetica", fontface="bold"),
+    color = "white", size = 4.5) +
+  geom_point(
+    data = trackingraw %>% filter(team == "defense"),
+    mapping = aes(x = x, y = y),
+    fill = "white", color = "black",
+    shape = 21, alpha = 1, size = 10, stroke = 1.75) + 
+  geom_text(
+    data = trackingraw %>% filter(team == "defense"),
+    mapping = aes(x = x, y = y, label = player_num, family="Helvetica", fontface="bold"),
+    color = "black", size = 4.5) +
+  geom_point(
+    data = trackingraw %>% filter(player == 0),
+    mapping = aes(x = x, y = y),
+    fill = "black", color = "black",
+    shape = 21, alpha = 1, size = 4) +
+  labs(title = "Aubamayang 57th minute goal in win at Fulham (0-3)", 
+       caption = "Data Source: Ricardo Tavares [https://github.com/rjtavares]") + 
+  transition_time(frame) +
+  ease_aes('linear') +
+  NULL
+
+play_length <- length(unique(trackingraw$frame))
+play_anim <- animate(
+  AubaGoalFrames,
+  fps = 15, 
+  nframe = play_length,
+  width = 718,
+  height = 500,
+  end_pause = 10)
+
+play_anim
+
+anim_save("AubaGoal.gif", play_anim)
+
+
+```
+
+
+
